@@ -1,0 +1,65 @@
+﻿@page "/studentedit/{Id:int}"
+@inject StudentService StudentService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager navigationManager 
+@attribute [Authorize]
+<h3>Sagird Melumatlarini Deyisdir</h3>
+
+<div class="row">
+    <div class="col-9">
+        <EditForm Model="model" OnValidSubmit="UpdateStudent">
+            <RadzenCard>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <label>Adi</label>
+                <RadzenTextBox @bind-Value="model.Name"></RadzenTextBox>
+                <label>Soyadi</label>
+                <RadzenTextBox @bind-Value="model.LastName"></RadzenTextBox>
+                <label>Atasinin adi</label>
+                <RadzenTextBox @bind-Value="model.FatherName"></RadzenTextBox>
+                <label>Mektebi</label>
+                <RadzenTextBox @bind-Value="model.School"></RadzenTextBox>
+                <label>Tevelludu</label>
+                <RadzenNumeric @bind-Value="model.BirthYear"></RadzenNumeric>
+                <label>Sinifi</label>
+                <RadzenTextBox @bind-Value="model.Class"></RadzenTextBox>
+                <label>Grup Nomresi</label>
+                <RadzenNumeric @bind-Value="model.GroupNumber"></RadzenNumeric>
+                <label>Ugim daxil olma ili</label>
+                <RadzenNumeric @bind-Value="model.UgimYear"></RadzenNumeric>
+                <hr />
+                <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Update"
+                              ButtonStyle="Radzen.ButtonStyle.Primary" />
+            </RadzenCard>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public int Id { get; set; }
+    private StudentAddModel model = new StudentAddModel();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetbyId(Id);
+    }
+
+    private async Task GetbyId(int id)
+    {
+        var accesstoken = await LocalStorage.GetItemAsync<string>("User");
+        var responce = await StudentService.GetByIdAsync(id, accesstoken);
+        if (responce.IsSuccess)
+        {
+            model = responce.Data;
+        }
+
+    }
+
+    private async Task UpdateStudent()
+    {
+        var accesstoken = await LocalStorage.GetItemAsync<string>("User");
+        var responce = await StudentService.UpdateStudentAsync(model, accesstoken);
+        navigationManager.NavigateTo("/studentlist");
+    }
+}

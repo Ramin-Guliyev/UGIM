@@ -1,0 +1,86 @@
+﻿@page "/studentlist"
+@inject StudentService studentService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager navManager
+@attribute [Authorize]
+<RadzenButton ButtonStyle="Radzen.ButtonStyle.Primary" Click="NavigateToStudentAdd">Yeni Sagird Elave Et</RadzenButton>
+
+<table class="table caption-top">
+    <caption>List of users</caption>
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Adi</th>
+            <th scope="col">Soyadi</th>
+            <th scope="col">AtaAdi</th>
+            <th scope="col">Mektebi</th>
+            <th scope="col">Teveludu</th>
+            <th scope="col">Sinifi</th>
+            <th scope="col">UgimIli</th>
+            <th scope="col">Grum No</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in students)
+        {
+            <tr>
+                <th scope="row">@(stNo++)</th>
+                <td>@item.Name</td>
+                <td>@item.LastName</td>
+                <td>@item.FatherName</td>
+                <th>@item.School</th>
+                <td>@item.BirthYear</td>
+                <td>@item.Class</td>
+                <td>@item.UgimYear</td>
+                <td>@item.GroupNumber</td>
+                <td><RadzenButton Text="Deyisdir" ButtonStyle="Radzen.ButtonStyle.Warning" Click="@(()=>NavigateToUpdate(item.Id))"/></td>
+                <td><RadzenButton Text="Sil" Click="@(async () => await DeleteStudent(@item.Id))" ButtonStyle="Radzen.ButtonStyle.Danger" /></td>
+            </tr>
+
+        }
+    </tbody>
+</table>
+@code {
+
+    int stNo = 1;
+    IEnumerable<StudentAddModel> students = new List<StudentAddModel>();
+    protected override async Task OnInitializedAsync()
+    {
+        await GetStudents();
+        await base.OnInitializedAsync();
+    }
+
+    async Task GetStudents()
+    {
+        var accesstoken = await LocalStorage.GetItemAsync<string>("User");
+        var response = await studentService.GetStudentAsync(accesstoken);
+        if (response.IsSuccess)
+        {
+            students = response.Data;
+        }
+        else
+        {
+            students = null;
+        }
+    }
+
+    async Task DeleteStudent(int id)
+    {
+        var accesstoken = await LocalStorage.GetItemAsync<string>("User");
+        var response = await studentService.DeleteAsync(id, accesstoken);
+
+        if (response.IsSuccess)
+            navManager.NavigateTo("/studentlist", true);
+    }
+
+    void NavigateToUpdate(int id)
+    {
+        navManager.NavigateTo($"/studentedit/{id}");
+    }
+    void NavigateToStudentAdd()
+    {
+        navManager.NavigateTo($"/studentadd");
+    }
+}

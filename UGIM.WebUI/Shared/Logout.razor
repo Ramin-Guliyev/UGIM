@@ -1,0 +1,16 @@
+﻿@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider StateProvider
+<AuthorizeView>
+    <button @onclick="LogoutUser">Logout</button>
+</AuthorizeView>
+
+
+@code {
+
+   private async Task LogoutUser()
+   {
+       var localstateprovider = (LocalAuthenticationStateProvider) StateProvider;
+       await localstateprovider.LogoutAsync();
+       NavigationManager.NavigateTo("/counter");
+   }
+}

@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31129.286
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UGIM.Server", "UGIM.Server\UGIM.Server.csproj", "{0A965BE3-C001-42D9-9B25-81983D552B54}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UGIM.WebUI", "UGIM.WebUI\UGIM.WebUI.csproj", "{CF7D10EB-5C1B-4986-8F4D-DF98953FEEB4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0A965BE3-C001-42D9-9B25-81983D552B54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A965BE3-C001-42D9-9B25-81983D552B54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A965BE3-C001-42D9-9B25-81983D552B54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A965BE3-C001-42D9-9B25-81983D552B54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF7D10EB-5C1B-4986-8F4D-DF98953FEEB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF7D10EB-5C1B-4986-8F4D-DF98953FEEB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF7D10EB-5C1B-4986-8F4D-DF98953FEEB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF7D10EB-5C1B-4986-8F4D-DF98953FEEB4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {42E6BD34-9022-4402-9861-2F0F597D2EAD}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,104 @@
+﻿@page "/login"
+@inject AuthService authService
+@inject NavigationManager navigationManager
+@inject ILocalStorageService localStorage
+@inject AuthenticationStateProvider StateProvider
+<div class="row">
+    <div class="col-xl-6">
+        <h2>Login to your account</h2>
+        <EditForm Model="model" OnValidSubmit="LoginUser">
+            <RadzenCard>
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <label>Email</label>
+                <RadzenTextBox style="display: block" Name="Email" @bind-Value=@model.Email />
+
+                <label>Password</label>
+                <RadzenPassword @bind-Value="model.Password"></RadzenPassword>
+
+                <hr />
+                <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Giris"
+                              ButtonStyle="Radzen.ButtonStyle.Primary"
+                              Disabled="isBusy" />
+            </RadzenCard>
+        </EditForm>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xl-5">
+        <a style="cursor: pointer" @onclick=@ShowForgetForm>Sifreni Unutdum</a>
+        @if (showForm)
+        {
+            <EditForm Model="forgotModel" OnValidSubmit="ForgotPassword">
+                @if(!string.IsNullOrWhiteSpace(messageForgot))
+                { 
+                   <p>@messageForgot</p>
+                }
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+                <RadzenCard>
+                    <label>Email</label>
+                    <RadzenTextBox @bind-Value="forgotModel.Email"/>
+
+                    <hr />
+                    <RadzenButton ButtonType="Radzen.ButtonType.Submit" Text="Login"
+                                  ButtonStyle="Radzen.ButtonStyle.Secondary"
+                                  Disabled="isBusy" />
+                </RadzenCard>
+            </EditForm>
+        }
+    </div>
+</div>
+
+@code {
+
+    LoginViewModel model = new LoginViewModel();
+    bool isBusy = false;
+    string message = string.Empty;
+
+    private async Task LoginUser()
+    {
+        isBusy = true;
+        var result = await authService.LoginAsync(model);
+        if (result.IsSuccess)
+        {
+            message = result.Message;
+            await localStorage.SetItemAsStringAsync("User", message);
+            await StateProvider.GetAuthenticationStateAsync();
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            message = result.Message;
+        }
+        isBusy = false;
+
+    }
+    #region forgotpassword
+    bool showForm = false;
+    void ShowForgetForm()
+    {
+
+        showForm = true;
+    }
+    ForgotPasswordModel forgotModel = new ForgotPasswordModel();
+    string messageForgot = string.Empty;
+
+    private async Task ForgotPassword()
+    {
+        isBusy = true;
+        var result = await authService.ForgotPasswordAsync(forgotModel.Email);
+        if (result.IsSuccess)
+        {
+            messageForgot = "Email addresinizi gozden kecirin";
+
+        }
+        else
+        {
+            messageForgot = "Xeta bas verdi";
+        }
+        isBusy = false;
+    }
+    #endregion
+}
